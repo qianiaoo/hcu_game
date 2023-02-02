@@ -18,7 +18,7 @@ import {Effect, Event, Reaction} from "../static/GameEvents";
 
 
 
-const colorList = ['blue', 'red', 'yellow']
+const colorList = ['blue', 'green', 'yellow']
 
 
 type EventProps = Event & {
