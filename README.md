@@ -1,3 +1,5 @@
+`yarn install`を実行してから
+
 `yarn dev`で起動してください
 
 vercelにもデプロイしておりますので、
