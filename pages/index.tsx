@@ -181,7 +181,7 @@ const Home = () => {
                     break;
             }
         });
-        var randomEvent;
+        let randomEvent;
         while (true) {
             if (days % 7 == 0) {
                 const randomIndex = Math.floor(Math.random() * workEvents.length);
