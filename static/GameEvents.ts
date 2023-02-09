@@ -4,7 +4,8 @@ export enum Status {
     Money,
     Love,
     News,
-    None
+    None,
+    Days
 }
 
 export enum SS {
@@ -14,8 +15,12 @@ export enum SS {
     CS = '🖥️',
     Art = '🎨',
     Korona = '🦠',
-    Beer ='🍺'
+    Beer = '🍺'
+}
 
+export type SpecialStatus = {
+    ss: SS,
+    text: string
 }
 
 export type Effect = {
@@ -27,7 +32,7 @@ export type Reaction = {
     effects: Effect[],
     text?: string,
     button: string,
-    ss?: SS
+    specialStatus?: SpecialStatus
 }
 
 
@@ -38,17 +43,43 @@ export enum EventType {
     Work = 'バイトイベント',
     Love = '恋イベント',
     Special = '特別イベント',
-    OVER = 'GAVE OVER'
+    OVER = 'GAVE OVER',
+    Rule = 'ルール説明'
 }
 
-export type Event = {
+export type Condition = {
+    status: Status | SS,
+    value?: number
+}
+
+export type GameEvent = {
+    conditions?: Condition[]
     header: EventType
     context: string,
     reactions: Reaction[]
 }
 
+export const GAME_RULE_1: GameEvent = {
+    header: EventType.Rule,
+    context: "このゲームは広島市立大学の平凡な日常をシミュレーションゲーム。あなたは平凡な男子大学生として、市立大学を学び、友達を作り、理想を見つけ、実現をするのだ！" +
+        "注意していただきたのは、画面上には3つのステタスがあります。それぞれは、GPA、あなたの学力を表すものです。" +
+        "気持ち、あなたが楽しいかどうかを表すものです。お金、あなたが持っているお金を表すものです。" +
+        "この3つのステタスはGameのエンディングと繋がっているので、ご注意ください。では、楽しんでください。",
+    reactions: [
+        {
+            effects: [
+                {
+                    status: Status.None,
+                    value: 0
+                },
+            ],
+            button: 'ゲームスタット！',
+        },
+    ]
 
-export const GAME_OVER_GPA_LOW: Event = {
+}
+
+export const GAME_OVER_GPA_LOW: GameEvent = {
     header: EventType.OVER,
     context: 'あなたのGPAが低すぎて、退学された',
     reactions: [
@@ -64,7 +95,7 @@ export const GAME_OVER_GPA_LOW: Event = {
     ]
 }
 
-export const GAME_OVER_GPA_HIGH: Event = {
+export const GAME_OVER_GPA_HIGH: GameEvent = {
     header: EventType.OVER,
     context: 'おめでとう！あなたの優秀の成績で東大大学院に入ることになった！',
     reactions: [
@@ -81,7 +112,7 @@ export const GAME_OVER_GPA_HIGH: Event = {
 }
 
 
-export const GAME_OVER_MONEY_HIGH: Event = {
+export const GAME_OVER_MONEY_HIGH: GameEvent = {
     header: EventType.OVER,
     context: 'おめでとう！お金持ちのあなたには大学で勉強する意味がない',
     reactions: [
@@ -97,7 +128,7 @@ export const GAME_OVER_MONEY_HIGH: Event = {
     ]
 }
 
-export const GAME_OVER_MONEY_LOW: Event = {
+export const GAME_OVER_MONEY_LOW: GameEvent = {
     header: EventType.OVER,
     context: 'あなたがお金がなくて、餓死した',
     reactions: [
@@ -114,7 +145,7 @@ export const GAME_OVER_MONEY_LOW: Event = {
 }
 
 
-export const GAME_OVER_HAPPY_LOW: Event = {
+export const GAME_OVER_HAPPY_LOW: GameEvent = {
     header: EventType.OVER,
     context: 'あなたが鬱病になり、自殺した。',
     reactions: [
@@ -130,7 +161,7 @@ export const GAME_OVER_HAPPY_LOW: Event = {
     ]
 }
 
-export const GAME_OVER_HAPPY_HIGH: Event = {
+export const GAME_OVER_HAPPY_HIGH: GameEvent = {
     header: EventType.OVER,
     context: 'あなたはパリピそのもので、いつも楽しいあなたは人生に勝った',
     reactions: [
@@ -146,7 +177,7 @@ export const GAME_OVER_HAPPY_HIGH: Event = {
     ]
 }
 
-export const SP_GAME_EVENTS: Event[] = [
+export const SP_GAME_EVENTS: GameEvent[] = [
     {
         header: EventType.Special,
         context: '入学おめでとうございます！広島市立大学へようこそ！市立大では国際学部、芸術学部、情報科学部3つの学部があり、幅広い学問を学べます。あなたの学部を教えてください！',
@@ -159,7 +190,10 @@ export const SP_GAME_EVENTS: Event[] = [
                     },
                 ],
                 button: '国際学部',
-                ss: SS.Internation
+                specialStatus: {
+                    ss:  SS.Internation,
+                    text: "あなたは国際学部で、人との交流に関するイベントが出ます。"
+                }
             },
             {
                 effects: [
@@ -169,7 +203,11 @@ export const SP_GAME_EVENTS: Event[] = [
                     },
                 ],
                 button: '情報科学部',
-                ss: SS.CS
+                specialStatus: {
+                    ss: SS.CS,
+                    text: "あなたは情報科学部で、情報系のクイズが出ます。"
+                }
+
             },
             {
                 effects: [
@@ -179,8 +217,56 @@ export const SP_GAME_EVENTS: Event[] = [
                     },
                 ],
                 button: '芸術学部',
-                ss: SS.Art
+                specialStatus: {
+                    ss: SS.Art,
+                    text: "あなたは芸術学部で、芸術系のイベントが出ます。"
+                }            },
+        ]
+    },
+    {
+        header: EventType.Special,
+        context: '国際学部へようこそ！あなたはどんな人でも楽しく話せます！たくさんお友達を作りましょう！',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.None,
+                        value: 0
+                    },
+                ],
+                button: '了解',
             },
+        ]
+    },
+    {
+        header: EventType.Special,
+        context: '情報科学部へようこそ！あなたはとても頭がいい人で、どんな積分微分はあなたにとってたいやすもの。いっぱい知識を勉強しましょう！',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.None,
+                        value: 0
+                    },
+                ],
+                button: '了解',
+            },
+        ]
+    },
+    {
+        header: EventType.Special,
+        context: '芸術学部へようこそ！あなたはセンスを持っていて、素晴らしい作品を作れるように頑張りましょう！',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.None,
+                        value: 0
+                    },
+                ],
+                button: '了解',
+            },
+
         ]
     },
     {
@@ -195,466 +281,41 @@ export const SP_GAME_EVENTS: Event[] = [
                     },
                 ],
                 button: '了解',
-                ss: SS.Korona
-            },
+                specialStatus: {
+                    ss: SS.Korona,
+                    text: "あなたはコロナにかかりました。生活は色々が変わります。"
+                }            },
 
         ]
     },
 
 ]
 
-export const GAME_EVENTS: Event[] = [
+export const SP_EVENT_DAYS_BEER: GameEvent = {
+    header: EventType.Special,
+    context: '成人になりました！お酒を飲めるようになりました。あなたはお酒が好きですか。',
+    reactions: [
+        {
+            effects: [
+                {
+                    status: Status.None,
+                    value: 0
+                },
+            ],
+            button: '好き',
+            specialStatus: {
+                ss: SS.Beer,
+                text: "あなたはお酒が大好きで、お酒に関するイベントが出ます。"
+            }        },
+        {
+            effects: [
+                {
+                    status: Status.None,
+                    value: 0
+                },
+            ],
+            button: '好きじゃない',
+        },
 
-    {
-        header: EventType.Love,
-        context: '女の子に告白した、彼女ができた',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Happy,
-                        value: 30
-                    },
-                ],
-                button: 'やったー！',
-                ss: SS.GirlFriend
-            },
-        ]
-    },
-    {
-        header: EventType.Love,
-        context: '友達とお酒飲み過ぎて病院に運ばれた',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Happy,
-                        value: 10
-                    },
-                ],
-                button: '乾杯！',
-                ss: SS.Beer
-            },
-        ]
-    },
-    {
-        header: EventType.Friend,
-        context: '授業で知り合った女の子からご飯誘われました。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Love,
-                        value: 10,
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 10
-                    },
-                    {
-                        status: Status.Money,
-                        value: -3000
-                    }
-                ],
-                button: '行きます！'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.None,
-                        value: 0,
-                    }
-                ],
-                text: '変化なし',
-                button: 'ごめん、また今度'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.Love,
-                        value: -1,
-                    }
-                ],
-                button: '無視'
-            }
-        ]
-    },
-    {
-        header: EventType.Friend,
-        context: '友達にカラオケに誘われた。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Love,
-                        value: 1,
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 3
-                    },
-                    {
-                        status: Status.Money,
-                        value: -2000
-                    }
-                ],
-                text: '😀',
-                button: '行きます！'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.None,
-                        value: 0,
-                    }
-                ],
-                text: '変化なし',
-                button: '行かない'
-            },
-
-        ]
-    },
-    {
-        header: EventType.Daily,
-        context: '沖縄の首里城に火事で燃えてしまった。コンビニで寄付金を募集している。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: -1000,
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 1,
-                    },
-
-                ],
-                button: '一千円寄付'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.None,
-                        value: 0,
-                    },
-                ],
-                button: '無視'
-            },
-        ]
-    },
-    {
-        header: EventType.Friend,
-        context: '友達にパチンコに誘われた、行きますか。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: -10000,
-                    },
-                    {
-                        status: Status.Happy,
-                        value: -10,
-                    },
-
-                ],
-                button: '行く'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 10000,
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 10,
-                    },
-
-                ],
-                button: '行く'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.None,
-                        value: 0,
-                    },
-
-                ],
-                button: '行かない'
-            },
-        ]
-    },
-    {
-        header: EventType.Daily,
-        context: '学校に行く道で可愛い女の子が微笑んでくれた',
-        reactions: [
-            {
-                effects: [
-
-                    {
-                        status: Status.Happy,
-                        value: 2,
-                    },
-
-                ],
-                button: '😀'
-            },
-
-        ]
-    },
-    {
-        header: EventType.Daily,
-        context: '道で一千円拾った',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 1000
-                    }
-                ],
-                button: '自分のものにする'
-            },
-            {
-                effects: [
-
-                    {
-                        status: Status.Happy,
-                        value: 1,
-                    },
-
-                ],
-                button: '警察に渡す'
-            },
-        ]
-    },
-    {
-        header: EventType.Love,
-        context: '試験勉強期間に好きな女子に京都旅行に誘われた。旅行代は3万かかる。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: -30000
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 30
-                    },
-                    {
-                        status: Status.Love,
-                        value: 30
-                    },
-                    {
-                        status: Status.Gpa,
-                        value: -1
-                    }
-                ],
-                button: '行く'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.Love,
-                        value: -1,
-                    },
-
-                ],
-                button: '行かない'
-            },
-        ]
-    },
-    {
-        header: EventType.Work,
-        context: 'コンビニでバイトした、2千円もらった。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 2000
-                    },
-                ],
-                button: '了解'
-            },
-        ]
-    },
-    {
-        header: EventType.Work,
-        context: 'スシローでバイトした、3千円もらった。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 3000
-                    },
-                ],
-                button: '了解'
-            },
-        ]
-    },
-    {
-        header: EventType.Work,
-        context: 'ヤマトで夜勤のバイトした、1万円もらった。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 10000
-                    },
-                    {
-                        status: Status.Happy,
-                        value: -5
-                    },
-                ],
-                button: '了解'
-            },
-        ]
-    },
-    {
-        header: EventType.Work,
-        context: '吉野家で夜バイトした、1万円もらった。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 10000
-                    },
-                ],
-                button: '了解'
-            },
-        ]
-    },
-    {
-        header: EventType.School,
-        context: '真面目に勉強した、成績よくなった',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Gpa,
-                        value: 0.1
-                    },
-                ],
-                button: '了解'
-            },
-        ]
-    },
-    {
-        header: EventType.School,
-        context: '試験での不正行為の摘発されて、全部の科目が不可になった',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Gpa,
-                        value: -2
-                    },
-                ],
-                button: '了解'
-            },
-        ]
-    },
-    {
-        header: EventType.School,
-        context: '試験期間にハンターハンターが新しく発売された',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Gpa,
-                        value: -0.5
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 5
-                    }
-                ],
-                button: 'すぐ読む'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.Gpa,
-                        value: 0.2
-                    },
-
-                ],
-                button: '真面目に勉強する'
-            },
-        ]
-    },
-    {
-        header: EventType.Daily,
-        context: '好きなアイドルは広島にライブする、チケット1万円',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: -10000
-                    },
-                    {
-                        status: Status.Happy,
-                        value: 10
-                    }
-                ],
-                button: '行く'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.Gpa,
-                        value: 0.5
-                    },
-
-                ],
-                button: '勉強したいから行かない'
-            },
-            {
-                effects: [
-                    {
-                        status: Status.Money,
-                        value: 3000
-                    },
-
-                ],
-                button: 'バイトがあるから行かない'
-            },
-        ]
-    },
-    {
-        header: EventType.Daily,
-        context: '吹奏楽部に勧誘された',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.Happy,
-                        value: 10
-                    }
-                ],
-                button: '部活始まる',
-                ss: SS.ClubSuiSo
-            },
-
-            {
-                effects: [
-                    {
-                        status: Status.None,
-                        value: 0
-                    },
-
-                ],
-                button: '行かない'
-            },
-        ]
-    },
-]
+    ]
+}

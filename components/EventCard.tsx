@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Button,
-    ButtonGroup,
     Card,
     Text,
     CardBody,
@@ -9,23 +8,22 @@ import {
     Divider,
     Heading,
     Stack,
+    VStack,
     Center,
     SimpleGrid
 } from "@chakra-ui/react";
-import {Effect, Event, Reaction} from "../static/GameEvents";
-
-
+import {GameEvent, Reaction} from "../static/GameEvents";
 
 
 
 const colorList = ['blue', 'green', 'yellow']
 
 
-type EventProps = Event & {
+type EventProps = GameEvent & {
     handleReact: (e: Reaction) => void
 }
 
-const Event = ({header, context, reactions, handleReact} : EventProps) => {
+const EventCard = ({header, context, reactions, handleReact} : EventProps) => {
 
 
     return (
@@ -43,15 +41,15 @@ const Event = ({header, context, reactions, handleReact} : EventProps) => {
             </CardBody>
             <Divider />
             <CardFooter>
-                <SimpleGrid  spacing='2'>
-                    {reactions.map((e, i) => <Button key={i} onClick={() => handleReact(e)} colorScheme={colorList[i]}>
+                <VStack w={'100%'} >
+                    {reactions.map((e, i) => <Button minW={'30vh'} key={i} onClick={() => handleReact(e)} colorScheme={colorList[i]}>
                         {e.button}
                     </Button>)}
 
-                </SimpleGrid>
+                </VStack>
             </CardFooter>
         </Card>
     );
 };
 
-export default Event;
+export default EventCard;
