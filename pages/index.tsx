@@ -4,8 +4,7 @@ import StatusBar from "../components/StatusBar";
 import EventCard from "../components/EventCard";
 import {
     Condition,
-    Effect,
-    EventType, GAME_OVER_DAYS_HIGH,
+    GAME_OVER_DAYS_HIGH,
     GAME_OVER_GPA_HIGH,
     GAME_OVER_GPA_LOW,
     GAME_OVER_HAPPY_HIGH,
@@ -21,7 +20,6 @@ import {
 } from "../static/GameEvents";
 import {useState} from "react";
 import {getEvent} from "../utils/EventUtils";
-import {assertUnaryExpression} from "@babel/types";
 import {WorkEvents} from "../static/WorkEvent";
 
 const Home = () => {
@@ -31,8 +29,8 @@ const Home = () => {
     const [gpa, setGpa] = useState(2);
     const [money, setMoney] = useState(10000);
     const [ssList, setSsList] = useState<SpecialStatus[]>([]);
-
     const [days, setDays] = useState(0);
+
     const isGameOver = () => {
         if (gpa < 0) {
             setEvent(GAME_OVER_GPA_LOW);
