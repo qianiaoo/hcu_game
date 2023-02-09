@@ -75,7 +75,7 @@ const Header = ({money, happy, gpa}: HeaderProps) => {
     }
 
     return (
-        <HStack　px={'15px'} justify={"space-between"}>
+        <HStack maxW={'450px'}　px={'15px'} justify={"space-between"}>
             <Text fontSize={'18px'} fontWeight={700}>GPA: {gpa.toFixed(1)}</Text>
             <Text fontSize={'18px'} fontWeight={700}>{happyStatus}</Text>
             <Text fontSize={'18px'} fontWeight={700}>金: ¥{money}</Text>
