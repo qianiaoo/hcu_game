@@ -75,6 +75,25 @@ export const DailyEvents: GameEvent[] = [
         ]
     },
     {
+        header: EventType.Daily,
+        context: 'あなたはコロナ陽性になった。',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.None,
+                        value: 0
+                    },
+                ],
+                button: '了解',
+                specialStatus: {
+                    ss: SS.Korona,
+                    text: "あなたはコロナにかかりました。生活は色々が変わります。"
+                }            },
+
+        ]
+    },
+    {
         conditions:[ {
           status: Status.Days,
           value: 30

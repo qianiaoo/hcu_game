@@ -15,7 +15,8 @@ export enum SS {
     CS = '🖥️',
     Art = '🎨',
     Korona = '🦠',
-    Beer = '🍺'
+    Beer = '🍺',
+    Cheater = '🤥'
 }
 
 export type SpecialStatus = {
@@ -97,7 +98,7 @@ export const GAME_OVER_GPA_LOW: GameEvent = {
 
 export const GAME_OVER_GPA_HIGH: GameEvent = {
     header: EventType.OVER,
-    context: 'おめでとう！あなたの優秀の成績で東大大学院に入ることになった！',
+    context: 'おめでとう！あなたの優秀の成績で海外大学の大学院に推薦することになった！これから頑張って行きましょう！',
     reactions: [
         {
             effects: [
@@ -164,6 +165,22 @@ export const GAME_OVER_HAPPY_LOW: GameEvent = {
 export const GAME_OVER_HAPPY_HIGH: GameEvent = {
     header: EventType.OVER,
     context: 'あなたはパリピそのもので、いつも楽しいあなたは人生に勝った',
+    reactions: [
+        {
+            effects: [
+                {
+                    status: Status.None,
+                    value: 0
+                },
+            ],
+            button: 'GAME OVER',
+        },
+    ]
+}
+
+export const GAME_OVER_DAYS_HIGH: GameEvent = {
+    header: EventType.OVER,
+    context: '卒業おめてとうございます！',
     reactions: [
         {
             effects: [
@@ -269,25 +286,7 @@ export const SP_GAME_EVENTS: GameEvent[] = [
 
         ]
     },
-    {
-        header: EventType.Special,
-        context: 'あなたはコロナ陽性になった。',
-        reactions: [
-            {
-                effects: [
-                    {
-                        status: Status.None,
-                        value: 0
-                    },
-                ],
-                button: '了解',
-                specialStatus: {
-                    ss: SS.Korona,
-                    text: "あなたはコロナにかかりました。生活は色々が変わります。"
-                }            },
 
-        ]
-    },
 
 ]
 

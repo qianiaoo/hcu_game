@@ -5,7 +5,7 @@ import EventCard from "../components/EventCard";
 import {
     Condition,
     Effect,
-    EventType,
+    EventType, GAME_OVER_DAYS_HIGH,
     GAME_OVER_GPA_HIGH,
     GAME_OVER_GPA_LOW,
     GAME_OVER_HAPPY_HIGH,
@@ -22,6 +22,7 @@ import {
 import {useState} from "react";
 import {getEvent} from "../utils/EventUtils";
 import {assertUnaryExpression} from "@babel/types";
+import {WorkEvents} from "../static/WorkEvent";
 
 const Home = () => {
 
@@ -30,8 +31,8 @@ const Home = () => {
     const [gpa, setGpa] = useState(2);
     const [money, setMoney] = useState(10000);
     const [ssList, setSsList] = useState<SpecialStatus[]>([]);
-    let days = 0;
 
+    const [days, setDays] = useState(0);
     const isGameOver = () => {
         if (gpa < 0) {
             setEvent(GAME_OVER_GPA_LOW);
@@ -48,11 +49,15 @@ const Home = () => {
         } else if (money >= 1000000) {
             setEvent(GAME_OVER_MONEY_HIGH);
         }
+        if (days > 300) {
+            setEvent(GAME_OVER_DAYS_HIGH);
+        }
     }
 
     const isIncludesSS = (ss:SS) => {
         ssList.forEach(s => {
-            if (s.ss === ss) {
+            console.log("s:", s, "ss:", ss, "res:" + s.ss == ss)
+            if (s.ss == ss) {
                 return true
             }
         })
@@ -62,67 +67,72 @@ const Home = () => {
     const handleEventUseful = (e: GameEvent) => {
         let isUseful = true;
         e.reactions.forEach((el: Reaction)=> {
+            console.log("Reaction Check:", el.specialStatus && ssList.includes(el.specialStatus))
             if (el.specialStatus && ssList.includes(el.specialStatus)) {
                 isUseful = false;
-                return false
             }
         })
         e.conditions?.forEach((ec: Condition) => {
             const status = ec.status
             switch (status) {
                 case Status.Gpa:
+                    console.log("need GPA")
+
                     if (gpa < ec.value!) {
-                        return false
+                        isUseful = false
                     }
                     break
                 case Status.Days:
                     if (days < ec.value!) {
-                        return false
+                        isUseful = false;
                     }
                     break
                 case SS.GirlFriend:
                     if (!isIncludesSS(SS.GirlFriend)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case SS.ClubSuiSo:
                     if (!isIncludesSS(SS.ClubSuiSo)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case SS.Internation:
+                    console.log("need Inter")
+
                     if (!isIncludesSS(SS.Internation)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case SS.CS:
+                    console.log("need CS" + !isIncludesSS(SS.CS))
                     if (!isIncludesSS(SS.CS)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case SS.Art:
                     if (!isIncludesSS(SS.Art)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case SS.Korona:
                     if (!isIncludesSS(SS.Korona)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case SS.Beer:
                     if (!isIncludesSS(SS.Beer)) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case Status.Happy:
                     if (happy < ec.value!) {
-                        return false;
+                        isUseful = false;
                     }
                     break
                 case Status.Money:
                     if (money < ec.value!) {
-                        return false
+                        isUseful = false;
                     }
                     break;
                 case Status.News:
@@ -131,7 +141,7 @@ const Home = () => {
                     break;
                 case Status.Love:
                     if (love < ec.value!) {
-                        return false
+                        isUseful = false;
                     }
 
 
@@ -171,19 +181,32 @@ const Home = () => {
                     break;
             }
         });
-        let randomEvent;
-        do {
-            const randomIndex = Math.floor(Math.random() * events.length);
-            randomEvent = events[randomIndex];
+        var randomEvent;
+        while (true) {
+            if (days % 7 == 0) {
+                const randomIndex = Math.floor(Math.random() * workEvents.length);
+                randomEvent = workEvents[randomIndex];
+                break
 
-        } while (!handleEventUseful(randomEvent))
+            }
+            const randomIndex = Math.floor(Math.random() * events.length);
+            console.log("random Event:" + randomIndex);
+            randomEvent = events[randomIndex];
+            console.log(randomEvent);
+            console.log(!handleEventUseful(randomEvent));
+            if (handleEventUseful(randomEvent)) {
+                break
+            }
+        }
+
         setEvent(randomEvent);
         isGameOver()
-        days += 1;
+        setDays(days + 1);
     }
     const [event, setEvent] = useState(GAME_RULE_1);
 
     const events = getEvent();
+    const workEvents = WorkEvents;
 
 
     return (

@@ -18,6 +18,42 @@ export const SchoolEvents: GameEvent[] = [
     },
     {
         header: EventType.School,
+        context: '試験に不安で、そこで友達は一緒にカンニングをしましょうと誘われた、どうしましょうか。',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.Gpa,
+                        value: 1
+                    },
+
+                ],
+                specialStatus: {
+                  ss: SS.Cheater,
+                  text: 'あなたは試験に不正行為をしました。'
+                },
+                button: 'やる'
+            },
+            {
+                effects: [
+                    {
+                        status: Status.Gpa,
+                        value: -0.2
+                    },
+
+                ],
+
+                button: 'やらない'
+            },
+        ]
+    },
+    {
+        conditions:[
+            {
+                status: SS.Cheater
+            }
+        ],
+        header: EventType.School,
         context: '試験での不正行為の摘発されて、全部の科目が不可になった',
         reactions: [
             {
@@ -25,6 +61,26 @@ export const SchoolEvents: GameEvent[] = [
                     {
                         status: Status.Gpa,
                         value: -2
+                    },
+                ],
+                button: '了解'
+            },
+        ]
+    },
+    {
+        conditions:[
+            {
+                status: SS.Korona
+            }
+        ],
+        header: EventType.School,
+        context: 'コロナで倦怠感と疲労で成績が落ちた',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.Gpa,
+                        value: -0.1
                     },
                 ],
                 button: '了解'
@@ -44,7 +100,7 @@ export const SchoolEvents: GameEvent[] = [
                     },
                     {
                         status: Status.Happy,
-                        value: 5
+                        value: 10
                     }
                 ],
                 button: 'すぐ読む'

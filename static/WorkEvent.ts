@@ -70,6 +70,11 @@ export const WorkEvents: GameEvent[] = [
         ]
     },
     {
+        conditions: [
+            {
+                status: SS.CS
+            }
+        ],
         header: EventType.Work,
         context: 'エンジニアとしてインターンから一万円報酬をもらった',
         reactions: [
@@ -92,6 +97,26 @@ export const WorkEvents: GameEvent[] = [
         ],
         header: EventType.Work,
         context: 'エンジニアとしてインターンから一万円報酬をもらった',
+        reactions: [
+            {
+                effects: [
+                    {
+                        status: Status.Money,
+                        value: 10000
+                    },
+                ],
+                button: '了解'
+            },
+        ]
+    },
+    {
+        conditions: [
+            {
+                status: SS.Korona
+            }
+        ],
+        header: EventType.Special,
+        context: 'コロナ陽性者で国から一万円をもらった',
         reactions: [
             {
                 effects: [

@@ -135,6 +135,10 @@ export const FriendEvents: GameEvent[] = [
                         status: Status.Happy,
                         value: 10
                     },
+                    {
+                        status: Status.Money,
+                        value: -10000
+                    },
                 ],
                 button: '乾杯！',
             },

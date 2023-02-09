@@ -22,7 +22,7 @@ const StatusBar = ({ssList}: StatusBarProps) => {
 
     return (
         <>        <HStack m={'10px'}>
-            {ssList.map((s,i) => <Tag onClick={() => {setClickedTag(s); onOpen()}} key={s.text}>{s.ss}</Tag>)}
+            {ssList.map((s,i) => <Tag as={'button'} onClick={() => {setClickedTag(s); onOpen()}} key={s.text}>{s.ss}</Tag>)}
         </HStack>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
